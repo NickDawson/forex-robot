@@ -1,0 +1,1 @@
+delete from CANDLE_ENTITY;

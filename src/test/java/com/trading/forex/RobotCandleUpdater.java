@@ -48,8 +48,7 @@ public class RobotCandleUpdater {
 
         application = SpringApplication.run(RobotCandleUpdater.class, args);
 
-//        saveCandle(RobotAppBackTest.allDates(2017, 9, 27));
-
+        saveCandleWeek(2017, 12, 25);
         saveCandle(RobotAppBackTest.allDates(2017, 12, 25));
         saveCandle(RobotAppBackTest.allDates(2017, 12, 29));
 

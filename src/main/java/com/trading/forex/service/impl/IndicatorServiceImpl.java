@@ -272,10 +272,10 @@ public class IndicatorServiceImpl implements IndicatorService {
     }
 
     private Double extractNumber(String chaine) {
-        Pattern p = Pattern.compile("\\d+");
-        Matcher m = p.matcher(chaine);
-        while (m.find()) {
-            return Double.valueOf(m.group());
+        Pattern pattern = Pattern.compile("\\d+");
+        Matcher matcher = pattern.matcher(chaine);
+        if (matcher.find()) {
+            return Double.valueOf(matcher.group());
         }
         throw new RobotTechnicalException("Cannot found number in  string" + chaine);
     }

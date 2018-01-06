@@ -2,6 +2,7 @@ package com.trading.forex;
 
 import com.google.gson.Gson;
 import com.oanda.v20.instrument.CandlestickGranularity;
+import com.trading.forex.entity.TradeHistory;
 import com.trading.forex.model.*;
 import com.trading.forex.repository.TradeHistoryRepository;
 import com.trading.forex.service.InstrumentService;
@@ -15,6 +16,7 @@ import com.trading.forex.utils.CustomList;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import oracle.net.aso.p;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -69,7 +71,7 @@ public class RobotAppBackTest {
 
 
         int year = 2018, month = 1, day = 4;
-        printRealTradeHistories(year, month, day);
+
          List<List<Result>> globalResult = Arrays.asList(backTestExecDay(year, month, day).stream().sorted(Comparator.comparing(o -> o.begin)).collect(Collectors.toList()));
 
         for (List<Result> result : globalResult) {
@@ -79,7 +81,6 @@ public class RobotAppBackTest {
             for (Result res : result) {
                 log.info("Result: Symbol: " + res.getSymbol() + " status: " + res.status() + " Pip=" + res.pip() + " ,Way =" + res.getWay() + " ,Begin =" + DATE_FORMAT.format(res.begin) + " End=" + DATE_FORMAT.format(res.end) + ", Comment = " + res.getComment() + " result=" + res.getResult());
             }
-
         }
 
         final Map<String, Double> previous = getPreviousBackTest();
@@ -102,6 +103,8 @@ public class RobotAppBackTest {
         ).collect(Collectors.joining(","));
         log.info(resultCheck);
         Files.write(Paths.get(PATH_FILE), new Gson().toJson(current).getBytes());
+        printRealTradeHistories(year, month, day);
+
         System.exit(0);
 
     }
@@ -131,7 +134,10 @@ public class RobotAppBackTest {
         List<LocalDateTime> localDateTimes = allDates(year, month, day);
         final Date begin = Date.from(localDateTimes.get(0).atZone(ZoneId.systemDefault()).toInstant());
         final Date end = Date.from(localDateTimes.get(localDateTimes.size() - 1).atZone(ZoneId.systemDefault()).toInstant());
-        application.getBean(TradeHistoryRepository.class).findByTradeDateBetween(begin, end).stream().forEach(
+        List<TradeHistory> tradeHistories=application.getBean(TradeHistoryRepository.class).findByTradeDateBetween(begin, end);
+        log.info("Real : Total Pip "+tradeHistories.parallelStream().mapToDouble(p->p.getPip()).sum());
+        log.info("Porcentage Position Win:" + (new Double(tradeHistories.stream().filter(result1 -> result1.getPip().compareTo(Double.MIN_VALUE) > 0).count()) / new Double(tradeHistories.size())) * 100D + "%");
+        tradeHistories.stream().forEach(
                 tradeHistory ->
                         log.info("Real : Symbol: " + tradeHistory.getSymbol() + " Pip=" + tradeHistory.getPip() + " Result=" + tradeHistory.getResult() + ",Way =" + tradeHistory.getWay() + " ,Begin =" + DATE_FORMAT.format(tradeHistory.getTradeDate()) + " End=" + DATE_FORMAT.format(tradeHistory.getEndTime())));
 

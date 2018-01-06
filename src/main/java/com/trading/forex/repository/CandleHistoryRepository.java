@@ -13,6 +13,5 @@ import java.util.List;
 public interface CandleHistoryRepository extends CrudRepository<CandleEntity, CandleEntity.Key> {
 
     List<CandleEntity> findAllByKeyEpochBetweenAndKeySymbolAndKeyCandlestickGranularityOrderByKeyEpoch(long epochFrom,long epochTo, Symbol symbol, CandlestickGranularity candlestickGranularity);
-    Integer countByKeyEpochBetweenAndKeySymbolAndKeyCandlestickGranularityOrderByKeyEpoch(long epochFrom,long epochTo, Symbol symbol, CandlestickGranularity candlestickGranularity);
 
 }

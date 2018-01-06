@@ -1,4 +1,4 @@
-## Oanda trading robot
+## Forex trading robot
 
 [![Build Status](https://travis-ci.org/hsouidi/oanda-robot.svg?branch=master)](https://travis-ci.org/hsouidi/oanda-robot)   [![Codacy Badge](https://api.codacy.com/project/badge/Grade/064bc4113e2f4bb795c0acbe1bffdb68)](https://www.codacy.com/app/hsouidi/oanda-robot?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=hsouidi/oanda-robot&amp;utm_campaign=Badge_Grade)
 
