@@ -15,7 +15,7 @@ import java.util.List;
 import static com.trading.forex.utils.AlgoUtils.toPip;
 
 /**
- * Created by wf on 10/24/2017.
+ * Created by hsouidi on 10/24/2017.
  */
 @Slf4j
 public class MovingAverage extends IndicatorUtils {

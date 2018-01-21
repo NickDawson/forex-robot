@@ -9,7 +9,7 @@ import com.trading.forex.model.Way;
 import java.util.List;
 
 /**
- * Created by wf on 06/05/2017.
+ * Created by hsouidi on 06/05/2017.
  */
 public class RSI extends IndicatorUtils {
 

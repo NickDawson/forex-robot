@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by wf on 05/09/2017.
+ * Created by hsouidi on 05/09/2017.
  */
 public interface TradeHistoryRepository extends JpaRepository<TradeHistory, String> {
 

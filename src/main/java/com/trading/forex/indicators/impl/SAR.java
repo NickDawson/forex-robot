@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.List;
 
 /**
- * Created by wf on 06/08/2017.
+ * Created by hsouidi on 06/08/2017.
  */
 @Slf4j
 public class SAR extends IndicatorUtils {

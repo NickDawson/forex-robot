@@ -5,7 +5,7 @@ import com.oanda.v20.RequestException;
 import org.springframework.scheduling.annotation.Scheduled;
 
 /**
- * Created by wf on 10/20/2017.
+ * Created by hsouidi on 10/20/2017.
  */
 public interface BalanceService {
 

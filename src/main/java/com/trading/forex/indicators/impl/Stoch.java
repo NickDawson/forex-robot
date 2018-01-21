@@ -11,7 +11,7 @@ import lombok.Getter;
 import java.util.List;
 
 /**
- * Created by wf on 12/02/2017.
+ * Created by hsouidi on 12/02/2017.
  */
 public class Stoch extends IndicatorUtils {
 

@@ -17,7 +17,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableAutoConfiguration
-@ComponentScan(basePackages = "com.trading.forex", excludeFilters = {
+@ComponentScan(basePackages = {"com.trading.forex", "org.springframework.security.core.userdetails"}, excludeFilters = {
         @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = {InstrumentServiceDBImpl.class})})
 @EnableFeignClients
 @EnableScheduling
@@ -26,7 +26,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class RobotApp {
 
     public static void main(String[] args) {
-
 
         SpringApplication.run(RobotApp.class, args);
     }

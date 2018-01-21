@@ -1,7 +1,7 @@
 package com.trading.forex.model;
 
 /**
- * Created by wf on 11/19/2017.
+ * Created by hsouidi on 11/19/2017.
  */
 public enum  Currency {
 

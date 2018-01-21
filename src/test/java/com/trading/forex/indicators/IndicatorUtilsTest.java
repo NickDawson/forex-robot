@@ -11,7 +11,7 @@ import java.util.List;
 import static org.testng.Assert.*;
 
 /**
- * Created by wf on 12/16/2017.
+ * Created by hsouidi on 12/16/2017.
  */
 public class IndicatorUtilsTest {
 

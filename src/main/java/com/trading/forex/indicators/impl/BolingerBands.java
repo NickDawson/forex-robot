@@ -11,7 +11,7 @@ import lombok.Getter;
 import java.util.List;
 
 /**
- * Created by wf on 10/24/2017.
+ * Created by hsouidi on 10/24/2017.
  */
 public class BolingerBands extends IndicatorUtils {
 

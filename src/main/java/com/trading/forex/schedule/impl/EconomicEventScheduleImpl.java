@@ -8,7 +8,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 /**
- * Created by wf on 11/21/2017.
+ * Created by hsouidi on 11/21/2017.
  */
 @Service
 public class EconomicEventScheduleImpl implements EconomicEventSchedule {

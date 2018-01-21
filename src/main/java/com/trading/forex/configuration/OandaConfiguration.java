@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * Created by wf on 10/19/2017.
+ * Created by hsouidi on 10/19/2017.
  */
 @Configuration
 public class OandaConfiguration {

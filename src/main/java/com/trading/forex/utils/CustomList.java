@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
- * Created by wf on 06/19/2017.
+ * Created by hsouidi on 06/19/2017.
  */
 public class CustomList<T> extends CopyOnWriteArrayList<T> {
 

@@ -6,7 +6,7 @@ import com.trading.forex.model.SearchResult;
 import com.trading.forex.utils.CustomList;
 
 /**
- * Created by wf on 10/24/2017.
+ * Created by hsouidi on 10/24/2017.
  */
 public class IndicatorUtils {
 

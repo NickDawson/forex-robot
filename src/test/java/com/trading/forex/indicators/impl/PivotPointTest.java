@@ -7,7 +7,7 @@ import org.testng.annotations.Test;
 import static org.testng.Assert.*;
 
 /**
- * Created by wf on 11/28/2017.
+ * Created by hsouidi on 11/28/2017.
  */
 public class PivotPointTest {
     @Test

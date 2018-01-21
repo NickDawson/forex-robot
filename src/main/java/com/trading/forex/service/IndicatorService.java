@@ -7,7 +7,7 @@ import com.trading.forex.utils.CustomList;
 import java.util.Map;
 
 /**
- * Created by wf on 04/19/2017.
+ * Created by hsouidi on 04/19/2017.
  */
 public interface IndicatorService {
 

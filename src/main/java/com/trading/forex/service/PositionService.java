@@ -7,7 +7,7 @@ import com.oanda.v20.position.Position;
 import java.util.List;
 
 /**
- * Created by wf on 10/21/2017.
+ * Created by hsouidi on 10/21/2017.
  */
 public interface PositionService {
     List<Position> getOpenedPositions() throws RequestException, ExecuteException;

@@ -8,7 +8,7 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
 /**
- * Created by wf on 05/09/2017.
+ * Created by hsouidi on 05/09/2017.
  */
 public interface CandleHistoryRepository extends CrudRepository<CandleEntity, CandleEntity.Key> {
 

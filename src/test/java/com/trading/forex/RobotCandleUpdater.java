@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 import static com.trading.forex.RobotAppBackTest.allDatesSemaine;
 
 /**
- * Created by wf on 12/09/2017.
+ * Created by hsouidi on 12/09/2017.
  */
 @SpringBootApplication
 @EnableAutoConfiguration

@@ -10,7 +10,7 @@ import com.trading.forex.utils.CustomList;
 import java.util.List;
 
 /**
- * Created by wf on 11/01/2017.
+ * Created by hsouidi on 11/01/2017.
  */
 public class HighLows {
 

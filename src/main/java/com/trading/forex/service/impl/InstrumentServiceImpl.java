@@ -70,6 +70,7 @@ public class InstrumentServiceImpl implements InstrumentService {
             return instrumentCandlesResponse.getCandles().stream().map(candlestick -> Candle.toCandle(candlestick,symbol)).collect(Collectors.toCollection(CustomList::new));
         } catch (Exception e) {
             log.info("Error when retrieving princing for CandlestickGranularity {}, Symbol {} , Date {} , Date {}",candlestickGranularity, symbol,to, from);
+            log.error(e.getMessage(),e);
             throw new RobotTechnicalException(e);
         }
     }

@@ -2,6 +2,9 @@ package com.trading.forex;
 
 import com.google.gson.Gson;
 import com.oanda.v20.instrument.CandlestickGranularity;
+import com.trading.forex.configuration.AuthorizationServerConfig;
+import com.trading.forex.configuration.ResourceServerConfig;
+import com.trading.forex.configuration.SecurityConfig;
 import com.trading.forex.entity.TradeHistory;
 import com.trading.forex.model.*;
 import com.trading.forex.repository.TradeHistoryRepository;
@@ -37,14 +40,15 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
- * Created by wf on 10/19/2017.
+ * Created by hsouidi on 10/19/2017.
  */
 @SpringBootApplication
 @EnableAutoConfiguration
 @ComponentScan(basePackages = {"com.trading.forex.strategies", "com.trading.forex.configuration"}
         , excludeFilters = {
         @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = {
-                BalanceServiceImpl.class, InstrumentServiceImpl.class})})
+                BalanceServiceImpl.class, InstrumentServiceImpl.class
+                , SecurityConfig.class,AuthorizationServerConfig.class,ResourceServerConfig.class})})
 
 @Slf4j
 public class RobotAppBackTest {
@@ -67,10 +71,12 @@ public class RobotAppBackTest {
     public static void main(String[] args) throws IOException {
 
         application = SpringApplication.run(RobotAppBackTest.class, args);
-        //List<List<Result>> globalResult = backTestExecWeek(2017, 12, 24);
+        //List<List<Result>> globalResult = backTestExecWeek(2018, 1, 15);
 
 
-        int year = 2018, month = 1, day = 4;
+        int year = 2018;
+        int month = 1;
+        int day = 22;
 
          List<List<Result>> globalResult = Arrays.asList(backTestExecDay(year, month, day).stream().sorted(Comparator.comparing(o -> o.begin)).collect(Collectors.toList()));
 

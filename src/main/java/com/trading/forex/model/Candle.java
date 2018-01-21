@@ -16,7 +16,7 @@ import java.util.TimeZone;
 import static com.trading.forex.utils.AlgoUtils.toPip;
 
 /**
- * Created by wf on 10/21/2017.
+ * Created by hsouidi on 10/21/2017.
  */
 @Builder
 @Getter

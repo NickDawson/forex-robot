@@ -20,7 +20,7 @@ import static com.trading.forex.indicators.impl.MovingAverage.*;
 import static com.trading.forex.utils.AlgoUtils.*;
 
 /**
- * Created by wf on 11/01/2017.
+ * Created by hsouidi on 11/01/2017.
  */
 @Slf4j
 @Service

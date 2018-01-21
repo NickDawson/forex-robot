@@ -15,7 +15,7 @@ import java.util.Date;
 import java.util.function.Function;
 
 /**
- * Created by wf on 12/09/2017.
+ * Created by hsouidi on 12/09/2017.
  */
 public class AlgoUtils {
 

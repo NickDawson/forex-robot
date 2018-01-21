@@ -4,7 +4,7 @@ import com.trading.forex.exceptions.RobotTechnicalException;
 import lombok.Getter;
 
 /**
- * Created by wf on 04/23/2017.
+ * Created by hsouidi on 04/23/2017.
  */
 @Getter
 public enum Symbol {

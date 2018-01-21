@@ -3,7 +3,7 @@ package com.trading.forex.model;
 import com.trading.forex.exceptions.RobotTechnicalException;
 
 /**
- * Created by wf on 04/23/2017.
+ * Created by hsouidi on 04/23/2017.
  */
 public enum Decision {
 

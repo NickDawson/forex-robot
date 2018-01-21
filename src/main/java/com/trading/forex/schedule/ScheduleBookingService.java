@@ -1,7 +1,7 @@
 package com.trading.forex.schedule;
 
 /**
- * Created by wf on 10/19/2017.
+ * Created by hsouidi on 10/19/2017.
  */
 public interface ScheduleBookingService {
 

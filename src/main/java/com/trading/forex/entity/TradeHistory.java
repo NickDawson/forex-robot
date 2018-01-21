@@ -15,7 +15,7 @@ import javax.persistence.*;
 import java.util.Date;
 
 /**
- * Created by wf on 05/09/2017.
+ * Created by hsouidi on 05/09/2017.
  */
 @Data
 @Builder

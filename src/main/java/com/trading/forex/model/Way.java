@@ -3,7 +3,7 @@ package com.trading.forex.model;
 import lombok.Getter;
 
 /**
- * Created by wf on 05/08/2017.
+ * Created by hsouidi on 05/08/2017.
  */
 @Getter
 public enum Way {
