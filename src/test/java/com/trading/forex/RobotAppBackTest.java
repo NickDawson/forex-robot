@@ -67,10 +67,12 @@ public class RobotAppBackTest {
     public static void main(String[] args) throws IOException {
 
         application = SpringApplication.run(RobotAppBackTest.class, args);
-        //List<List<Result>> globalResult = backTestExecWeek(2017, 12, 24);
+        //List<List<Result>> globalResult = backTestExecWeek(2018, 1, 15);
 
 
-        int year = 2018, month = 1, day = 4;
+        int year = 2018;
+        int month = 1;
+        int day = 18;
 
          List<List<Result>> globalResult = Arrays.asList(backTestExecDay(year, month, day).stream().sorted(Comparator.comparing(o -> o.begin)).collect(Collectors.toList()));
 

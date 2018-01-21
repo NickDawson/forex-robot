@@ -14,6 +14,7 @@ import com.trading.forex.service.PositionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -21,6 +22,7 @@ import java.util.Optional;
 @Slf4j
 @RestController
 @CrossOrigin
+@PreAuthorize("hasAuthority('TRADER')")
 @RequestMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.ALL_VALUE)
 public class RobotRestController {
 
