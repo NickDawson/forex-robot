@@ -5,8 +5,10 @@ import com.oanda.v20.instrument.CandlestickGranularity;
 import com.trading.forex.configuration.AuthorizationServerConfig;
 import com.trading.forex.configuration.ResourceServerConfig;
 import com.trading.forex.configuration.SecurityConfig;
+import com.trading.forex.entity.EconomicCalendar;
 import com.trading.forex.entity.TradeHistory;
 import com.trading.forex.model.*;
+import com.trading.forex.repository.EconomicCalendarRepository;
 import com.trading.forex.repository.TradeHistoryRepository;
 import com.trading.forex.service.InstrumentService;
 import com.trading.forex.service.impl.BalanceServiceImpl;
@@ -19,7 +21,6 @@ import com.trading.forex.utils.CustomList;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import oracle.net.aso.p;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -48,7 +49,7 @@ import java.util.stream.Collectors;
         , excludeFilters = {
         @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = {
                 BalanceServiceImpl.class, InstrumentServiceImpl.class
-                , SecurityConfig.class,AuthorizationServerConfig.class,ResourceServerConfig.class})})
+                , SecurityConfig.class, AuthorizationServerConfig.class, ResourceServerConfig.class})})
 
 @Slf4j
 public class RobotAppBackTest {
@@ -66,31 +67,45 @@ public class RobotAppBackTest {
             Symbol.NZD_USD);
 
 
-    //static List<Symbol> symbols = Arrays.asList(Symbol.EUR_CHF);
-
     public static void main(String[] args) throws IOException {
 
         application = SpringApplication.run(RobotAppBackTest.class, args);
-        //List<List<Result>> globalResult = backTestExecWeek(2018, 1, 15);
+
+       List<DayResult> globalResult = backTestExecWeek(2016, 4, 3);
 
 
         int year = 2018;
-        int month = 1;
-        int day = 22;
+        int month = 2;
+        int day = 16;
 
-         List<List<Result>> globalResult = Arrays.asList(backTestExecDay(year, month, day).stream().sorted(Comparator.comparing(o -> o.begin)).collect(Collectors.toList()));
+      //List<DayResult> globalResult = Arrays.asList(backTestExecDay(year, month, day));
 
-        for (List<Result> result : globalResult) {
+        for (DayResult dayResult : globalResult) {
+            List<Result> result=dayResult.results;
             log.info("Total:" + result.size());
             log.info("Result:" + result.stream().mapToDouble(result1 -> result1.pip()).sum());
             log.info("Porcentage Position Win:" + (new Double(result.stream().filter(result1 -> result1.getResult().compareTo(Double.MIN_VALUE) > 0).count()) / new Double(result.size())) * 100D + "%");
+
+            dayResult.economicCalendars.stream().forEach(dayRslt ->
+                log.info(new StringBuilder()
+                        .append("Event=").append(dayRslt.getEconomicCalendarID().getEvent())
+                        .append(", Importance=").append(dayRslt.getImportance())
+                        .append(", Date=").append(DATE_FORMAT.format(dayRslt.getEconomicCalendarID().getEventDate()))
+                        .append(", Currency=").append(dayRslt.getCurrency())
+                        .append(", Previous=").append(dayRslt.getPrevious())
+                        .append(", Actual=").append(dayRslt.getActual())
+                        .append(", Forecast=").append(dayRslt.getForecast())
+
+                        .toString())
+            );
             for (Result res : result) {
                 log.info("Result: Symbol: " + res.getSymbol() + " status: " + res.status() + " Pip=" + res.pip() + " ,Way =" + res.getWay() + " ,Begin =" + DATE_FORMAT.format(res.begin) + " End=" + DATE_FORMAT.format(res.end) + ", Comment = " + res.getComment() + " result=" + res.getResult());
             }
         }
 
         final Map<String, Double> previous = getPreviousBackTest();
-        final Map<String, Double> current = globalResult.stream().collect(Collectors.toMap(p -> DATE_WT_FORMAT.format(p.get(0).getBegin()), result -> result.stream().mapToDouble(result1 -> result1.pip()).sum()));
+        final Map<String, Double> current = globalResult.stream().filter(p -> !p.results.isEmpty())
+                .collect(Collectors.toMap(p -> DATE_WT_FORMAT.format(p.results.get(0).getBegin()), result -> result.results.stream().mapToDouble(result1 -> result1.pip()).sum()));
         final String resultCheck = current.entrySet().stream().map((k) -> {
                     StringBuilder stringBuilder = new StringBuilder();
                     stringBuilder.append(k.getKey() + "=");
@@ -108,7 +123,8 @@ public class RobotAppBackTest {
 
         ).collect(Collectors.joining(","));
         log.info(resultCheck);
-        Files.write(Paths.get(PATH_FILE), new Gson().toJson(current).getBytes());
+        previous.putAll(current);
+        Files.write(Paths.get(PATH_FILE), new Gson().toJson(previous).getBytes());
         printRealTradeHistories(year, month, day);
 
         System.exit(0);
@@ -140,13 +156,20 @@ public class RobotAppBackTest {
         List<LocalDateTime> localDateTimes = allDates(year, month, day);
         final Date begin = Date.from(localDateTimes.get(0).atZone(ZoneId.systemDefault()).toInstant());
         final Date end = Date.from(localDateTimes.get(localDateTimes.size() - 1).atZone(ZoneId.systemDefault()).toInstant());
-        List<TradeHistory> tradeHistories=application.getBean(TradeHistoryRepository.class).findByTradeDateBetween(begin, end);
-        log.info("Real : Total Pip "+tradeHistories.parallelStream().mapToDouble(p->p.getPip()).sum());
+        List<TradeHistory> tradeHistories = application.getBean(TradeHistoryRepository.class).findByTradeDateBetween(begin, end);
+        log.info("Real : Total Pip " + tradeHistories.parallelStream().mapToDouble(p -> p.getPip()).sum());
         log.info("Porcentage Position Win:" + (new Double(tradeHistories.stream().filter(result1 -> result1.getPip().compareTo(Double.MIN_VALUE) > 0).count()) / new Double(tradeHistories.size())) * 100D + "%");
         tradeHistories.stream().forEach(
                 tradeHistory ->
                         log.info("Real : Symbol: " + tradeHistory.getSymbol() + " Pip=" + tradeHistory.getPip() + " Result=" + tradeHistory.getResult() + ",Way =" + tradeHistory.getWay() + " ,Begin =" + DATE_FORMAT.format(tradeHistory.getTradeDate()) + " End=" + DATE_FORMAT.format(tradeHistory.getEndTime())));
 
+    }
+
+    @Data
+    @AllArgsConstructor
+    public static class DayResult {
+        private List<Result> results;
+        private List<EconomicCalendar> economicCalendars;
     }
 
     @Data
@@ -187,17 +210,21 @@ public class RobotAppBackTest {
     }
 
 
-    private static List<Result> backTestExecDay(int year, int month, int day) {
+    private static DayResult backTestExecDay(int year, int month, int day) {
         return backTestExecDay(allDates(year, month, day), new ArrayList<>());
     }
 
-    private static List<Result> backTestExecDay(List<LocalDateTime> localDateTimes, List<Result> result) {
+    private static Date toDate(LocalDateTime localDateTime) {
+        return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+    }
+
+    private static DayResult backTestExecDay(List<LocalDateTime> localDateTimes, List<Result> result) {
         Map<Symbol, TradeBackTest> openedPosition = new ConcurrentHashMap<>();
         Map<Symbol, Double> symbolLastPrice = new ConcurrentHashMap<>();
         CandlestickGranularity candlestickGranularity = CandlestickGranularity.M5;
         Date dateGlobal = null;
         for (LocalDateTime localDateTime : localDateTimes) {
-            dateGlobal = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+            dateGlobal = toDate(localDateTime);
             symbols.parallelStream().forEach(symbol -> {
                 Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
                 CustomList<Candle> candle = application.getBean(InstrumentService.class).getPricing(candlestickGranularity, symbol, date, AlgoUtils.getFromDate(date, candlestickGranularity))
@@ -241,7 +268,9 @@ public class RobotAppBackTest {
             result.add(new Result(position.getValue().getTrade().currentProfit(currentPrice), position.getValue().getTrade().getWay(), position.getValue().getDate(), dateGlobal, position.getValue().getTrade().getSymbol(), position.getValue().getTrade().getComment() + " Close at end of Day"));
             openedPosition.remove(position.getValue().getTrade().getSymbol());
         }
-        return result;
+        final EconomicCalendarRepository economicCalendarRepository = application.getBean(EconomicCalendarRepository.class);
+        Collections.sort(result,Comparator.comparing(o -> o.begin));
+        return new DayResult(result, economicCalendarRepository.findAllByEventDateAndImportance(toDate(localDateTimes.get(0)), toDate(localDateTimes.get(localDateTimes.size() - 1)), Arrays.asList(Importance.HIGH, Importance.MEDIUM)));
     }
 
     private static List<TradeBackTest> filter(List<TradeBackTest> o, Symbol symbol) {
@@ -251,9 +280,9 @@ public class RobotAppBackTest {
     }
 
 
-    private static List<List<Result>> backTestExecWeek(int year, int month, int day) {
+    private static List<DayResult> backTestExecWeek(int year, int month, int day) {
 
-        List<List<Result>> globalResult = new ArrayList<>();
+        List<DayResult> globalResult = new ArrayList<>();
         for (List<LocalDateTime> localDateTimes : allDatesSemaine(year, month, day)) {
             List<Result> result = new ArrayList<>();
             globalResult.add(backTestExecDay(localDateTimes, result));
