@@ -3,7 +3,12 @@ package com.trading.forex.indicators;
 import com.trading.forex.exceptions.RobotTechnicalException;
 import com.trading.forex.model.Candle;
 import com.trading.forex.model.SearchResult;
+import com.trading.forex.model.Way;
 import com.trading.forex.utils.CustomList;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by hsouidi on 10/24/2017.
@@ -36,6 +41,20 @@ public class IndicatorUtils {
             }
         }
         return SearchResult.builder().index(index).value(min).build();
+    }
+
+    public static boolean isSorted(double[] input, int NbelementTobeChecked, Way order) {
+        final int index=getIndex(input);
+        List<Double> list = Arrays.stream(input).boxed().collect(Collectors.toList()).subList(index - NbelementTobeChecked, index);
+        boolean sorted = true;
+
+        for (int i = 1; i < list.size(); i++) {
+            if ((order.getValue() * list.get(i).compareTo(list.get(i - 1))) < 0) {
+                return false;
+            }
+        }
+
+        return sorted;
     }
 
     public static SearchResult getHigh(CustomList<Candle> candles,int periode){

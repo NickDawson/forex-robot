@@ -161,9 +161,8 @@ public class ScheduleBookingServiceImpl implements ScheduleBookingService {
                         , investingDataGroup.getTakeProift()));
             }
             return orderCreateResponses;
-        } else if (positionService.getProfitOpenedPositions() > 7D) {
-            positionService.closeOpenedPosition();
         }
+
         return new ArrayList<>();
     }
 

@@ -132,66 +132,43 @@ public class IntradayStrategy {
         double atrPip = toPip(symbol, atr);
         double[] ema14values = valuesEma(candleM5, 14);
         double ema14 = getValue(ema14values);
-        Trade trade = null;
         final FibonacciResult fibonacciResultM5 = Fibonacci.values(candleM5, 100);
         final PivotPointResult pivotPointResult = PivotPoint.calcul(jm1);
-        Boolean isEmaCall = close > ema100 && close > ema300 && close > ema600 && close > ema1000 && close > ema14;
-        Boolean isEmaPut = close < ema100 && close < ema300 && close < ema600 && close < ema1000 && close < ema14;
-
-
+        Boolean isEmaCall = close > ema100 && close > ema300 && close > ema600 && close > ema1000;//&& close > ema14;
+        Boolean isEmaPut = close < ema100 && close < ema300 && close < ema600 && close < ema1000;//&& close < ema14 ;
+        MACD.MACDValues macdValues = MACD.values(candleM5, 12, 29, 9);
         CustomList<Integer> swingLows = HighLows.swingLows(candleM5, symbol);
         CustomList<Integer> swingHigh = HighLows.swingHighs(candleM5, symbol);
 
         if (atrPip < 5D) {
             return null;
         }
-        double marge = atrPip*2.35D;
+        double marge = atrPip * 2.35D;
 
-        if (trade == null) {
-            final Swing margeWithSwingLows = margeWithSwings(marge, candleM5, swingLows, close, Way.PUT);
-            final Swing margeWithSwingHigh = margeWithSwings(marge, candleM5, swingHigh, close, Way.CALL);
+        final Swing margeWithSwingLows = margeWithSwings(marge, candleM5, swingLows, close, Way.PUT);
+        final Swing margeWithSwingHigh = margeWithSwings(marge, candleM5, swingHigh, close, Way.CALL);
 
-            if (trend == Trend.BULLISH) {
-                return buildTradeSwing(marge, trend + " trend==Trend.BULLISH " + close, symbol, Way.CALL, close, margeWithSwingLows, margeWithSwingHigh, fibonacciResultM5);
-
-            } else if (trend == Trend.BEARISH) {
-                return buildTradeSwing(marge, trend + " trend==Trend.BEARISH " + close, symbol, Way.PUT, close, margeWithSwingLows, margeWithSwingHigh, fibonacciResultM5);
-
+        if (
+                stoch > 30 && isEmaPut &&
+                        toPip(symbol, MACD.getValue(macdValues.getOutMACD())) < -1D
+                        && isSorted(macdValues.getOutMACD(), 3, Way.PUT)
+                ) {
+            if (margeWithSwingHigh.getPip() < marge || margeWithSwingLows.getPip() < marge) {
+                return null;
             }
-            if (
-                    close < pivotPointResult.getPivot() &&
-                            stoch > 15 &&
-                            close < ema14 && isEmaPut
-                    ) {
-                if (margeWithSwingHigh.getPip() < marge || margeWithSwingLows.getPip() < marge) {
-                    return null;
-                }
-                return buildTradeSwing(marge, trend + " pivotPointResult.getPivot()<close " + pivotPointResult.getPivot() + ">" + close, symbol, Way.CALL, close, margeWithSwingLows, margeWithSwingHigh, fibonacciResultM5);
-                //  return buildTrade("pivotPointResult.getPivot()<close " + pivotPointResult.getPivot() + ">" + close, symbol, Way.PUT, atr, close, fibonacciResultM5, fibonacciResultM15, fibonacciResultH1, fibonacciResultDay);
+            return buildTradeSwing(marge, trend + " pivotPointResult.getPivot()<close " + pivotPointResult.getPivot() + "<" + close, symbol, Way.PUT, close, margeWithSwingLows, margeWithSwingHigh, fibonacciResultM5);
 
-            } else if (
-                    close > pivotPointResult.getPivot() &&
-                            stoch < 85 &&
-                            close > ema14 && isEmaCall
-                    ) {
+        } else if (
+                stoch < 70 && isEmaCall &&
+                        toPip(symbol, MACD.getValue(macdValues.getOutMACD())) > 1D && isSorted(macdValues.getOutMACD(), 3, Way.CALL)
+                ) {
 
-                if (margeWithSwingHigh.getPip() < marge || margeWithSwingLows.getPip() < marge) {
-                    return null;
-                }
-                return buildTradeSwing(marge, trend + " pivotPointResult.getPivot()>close " + pivotPointResult.getPivot() + ">" + close, symbol, Way.PUT, close, margeWithSwingLows, margeWithSwingHigh, fibonacciResultM5);
-                //return buildTrade("pivotPointResult.getPivot()>close " + pivotPointResult.getPivot() + ">" + close, symbol, Way.CALL, atr, close, fibonacciResultM5, fibonacciResultM15, fibonacciResultH1, fibonacciResultDay);
-
+            if (margeWithSwingHigh.getPip() < marge || margeWithSwingLows.getPip() < marge) {
+                return null;
             }
-            if ((isEmaPut && stoch > 15) || (isEmaCall && stoch > 85)) {
-                return buildTradeSwing(marge, trend + " EmaPut", symbol, Way.PUT, close, margeWithSwingLows, margeWithSwingHigh, fibonacciResultM5);
-
-            } else if ((isEmaCall && stoch < 85) || (isEmaPut && stoch < 15)) {
-                return buildTradeSwing(marge, trend + " EmaCALL", symbol, Way.CALL, close, margeWithSwingLows, margeWithSwingHigh, fibonacciResultM5);
-
-            }
-
+            return buildTradeSwing(marge, trend + " pivotPointResult.getPivot()>close " + pivotPointResult.getPivot() + ">" + close, symbol, Way.CALL, close, margeWithSwingLows, margeWithSwingHigh, fibonacciResultM5);
         }
-         return null;
+        return null;
     }
 
     private Trade strategy4(Symbol symbol, CustomList<Candle> candleM1, CustomList<Candle> candleD1, CustomList<Candle> candleM5,
@@ -261,14 +238,12 @@ public class IntradayStrategy {
         if (trade == null && positionWithCloud > 0 && isEmaCall
                 && close > pivotPointResult.getPivot()
                 && stoch < 70
-            //&& (lastStock - lastMinus1Stock) > 0
                 ) {
             return buildTrade("positionWithCloud > 0 & Ema Sup 100,300,600,1000,26 & Sup pivot & stock <75 &(lastStock - previousStock) > 0", symbol, Way.CALL, atr, close, fibonacciResultM5, fibonacciResultM15, fibonacciResultH1, fibonacciResultDay);
 
         } else if (bbpos > -1 && trade == null && positionWithCloud < 0 && isEmaPut
                 && close < pivotPointResult.getPivot()
                 && stoch > 30
-            //&& (lastStock - lastMinus1Stock) < 0
                 ) {
             return buildTrade("positionWithCloud < 0 & Ema Inf 100,300,600,1000,26 & Inf pivot & stock >25 &(lastStock - previousStock)< 0", symbol, Way.PUT, atr, close, fibonacciResultM5, fibonacciResultM15, fibonacciResultH1, fibonacciResultDay);
         }
@@ -397,39 +372,23 @@ public class IntradayStrategy {
         return val > min && val < max;
     }
 
-    private boolean isSorted(double[] input, int NbelementTobeChecked, Way order) {
-        List<Double> list = Arrays.stream(input).boxed().collect(Collectors.toList()).subList(input.length - NbelementTobeChecked, input.length);
-        boolean sorted = true;
-
-        for (int i = 1; i < list.size(); i++) {
-            if ((order.getValue() * list.get(i).compareTo(list.get(i - 1))) >= 0) {
-                sorted = true;
-            } else {
-                return false;
-
-            }
-        }
-
-        return sorted;
-    }
-
 
     private Double getStopValue(List<Ichimoku.TrendLine> ssb, List<Ichimoku.TrendLine> kijun, Symbol symbol, Double price, Way way) {
 
-        CustomList<Double> ssbPrice= ssb.stream()
-                .filter(trendLine -> way.getValue() * (trendLine.getPrice() - price)*Math.pow(10,symbol.getDecimal()) < -10)                .sorted((o1, o2) -> -1 * (way.getValue()) * o1.getPrice().compareTo(o2.getPrice()))
+        CustomList<Double> ssbPrice = ssb.stream()
+                .filter(trendLine -> way.getValue() * (trendLine.getPrice() - price) * Math.pow(10, symbol.getDecimal()) < -10).sorted((o1, o2) -> -1 * (way.getValue()) * o1.getPrice().compareTo(o2.getPrice()))
                 .map(trendLine -> trendLine.getPrice())
                 .collect(Collectors.toCollection(CustomList::new));
-        if(!ssbPrice.isEmpty()){
+        if (!ssbPrice.isEmpty()) {
             return ssbPrice.getFirst();
         }
 
-        CustomList<Double> kijunPrice= kijun.stream()
-                .filter(trendLine -> way.getValue() * (trendLine.getPrice() - price)*Math.pow(10,symbol.getDecimal()) < -10)
+        CustomList<Double> kijunPrice = kijun.stream()
+                .filter(trendLine -> way.getValue() * (trendLine.getPrice() - price) * Math.pow(10, symbol.getDecimal()) < -10)
                 .sorted((o1, o2) -> -1 * (way.getValue()) * o1.getPrice().compareTo(o2.getPrice()))
                 .map(trendLine -> trendLine.getPrice())
                 .collect(Collectors.toCollection(CustomList::new));
-        if(!kijunPrice.isEmpty()){
+        if (!kijunPrice.isEmpty()) {
             return kijunPrice.getFirst();
         }
 
@@ -443,21 +402,21 @@ public class IntradayStrategy {
     }
 
     private Double getProfitValue(List<Ichimoku.TrendLine> ssb, List<Ichimoku.TrendLine> kijun, Symbol symbol, Double price, Way way) {
-        CustomList<Double> ssbPrice= ssb.stream()
-                .filter(trendLine -> way.getValue() * (trendLine.getPrice() - price)*Math.pow(10,symbol.getDecimal()) > 10)
+        CustomList<Double> ssbPrice = ssb.stream()
+                .filter(trendLine -> way.getValue() * (trendLine.getPrice() - price) * Math.pow(10, symbol.getDecimal()) > 10)
                 .sorted((o1, o2) -> (way.getValue()) * o1.getPrice().compareTo(o2.getPrice()))
                 .map(trendLine -> trendLine.getPrice())
                 .collect(Collectors.toCollection(CustomList::new));
-        if(!ssbPrice.isEmpty()){
+        if (!ssbPrice.isEmpty()) {
             return ssbPrice.getFirst();
         }
 
-        CustomList<Double> kijunPrice= kijun.stream()
-                .filter(trendLine -> way.getValue() * (trendLine.getPrice() - price)*Math.pow(10,symbol.getDecimal()) > 10)
+        CustomList<Double> kijunPrice = kijun.stream()
+                .filter(trendLine -> way.getValue() * (trendLine.getPrice() - price) * Math.pow(10, symbol.getDecimal()) > 10)
                 .sorted((o1, o2) -> (way.getValue()) * o1.getPrice().compareTo(o2.getPrice()))
                 .map(trendLine -> trendLine.getPrice())
                 .collect(Collectors.toCollection(CustomList::new));
-        if(!kijunPrice.isEmpty()){
+        if (!kijunPrice.isEmpty()) {
             return kijunPrice.getFirst();
         }
 
