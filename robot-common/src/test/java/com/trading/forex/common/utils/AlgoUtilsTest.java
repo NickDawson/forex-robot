@@ -4,7 +4,7 @@ import com.trading.forex.common.model.CandlestickGranularity;
 import com.trading.forex.common.model.Symbol;
 import org.testng.annotations.Test;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
 
 public class AlgoUtilsTest {
 

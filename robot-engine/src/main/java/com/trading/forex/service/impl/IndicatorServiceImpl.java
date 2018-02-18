@@ -1,9 +1,9 @@
 package com.trading.forex.service.impl;
 
+import com.trading.forex.common.exceptions.RobotTechnicalException;
 import com.trading.forex.common.model.Symbol;
 import com.trading.forex.common.utils.CustomList;
 import com.trading.forex.entity.EconomicCalendar;
-import com.trading.forex.common.exceptions.RobotTechnicalException;
 import com.trading.forex.model.*;
 import com.trading.forex.service.IndicatorService;
 import lombok.extern.slf4j.Slf4j;

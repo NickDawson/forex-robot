@@ -12,7 +12,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Maven: com.trading.forex:oanda-connector:1.0-SNAPSHOT" level="project" />
+    <orderEntry type="module" module-name="oanda-broker-connector" />
     <orderEntry type="library" name="Maven: com.oanda.v20:v20:3.0.20" level="project" />
     <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpclient:4.5.3" level="project" />
     <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpcore:4.4.8" level="project" />

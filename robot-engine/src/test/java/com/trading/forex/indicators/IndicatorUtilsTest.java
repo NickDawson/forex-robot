@@ -7,7 +7,7 @@ import org.testng.annotations.Test;
 
 import java.util.Arrays;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
 
 /**
  * Created by hsouidi on 12/16/2017.

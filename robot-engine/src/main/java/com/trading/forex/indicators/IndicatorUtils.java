@@ -1,10 +1,11 @@
 package com.trading.forex.indicators;
 
 import com.trading.forex.common.exceptions.RobotTechnicalException;
+import com.trading.forex.common.model.Candle;
 import com.trading.forex.common.model.Way;
 import com.trading.forex.common.utils.CustomList;
 import com.trading.forex.model.SearchResult;
-import com.trading.forex.common.model.Candle;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;

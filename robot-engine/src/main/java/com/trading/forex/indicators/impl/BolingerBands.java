@@ -3,8 +3,8 @@ package com.trading.forex.indicators.impl;
 import com.tictactec.ta.lib.Core;
 import com.tictactec.ta.lib.MAType;
 import com.tictactec.ta.lib.MInteger;
-import com.trading.forex.indicators.IndicatorUtils;
 import com.trading.forex.common.model.Candle;
+import com.trading.forex.indicators.IndicatorUtils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
