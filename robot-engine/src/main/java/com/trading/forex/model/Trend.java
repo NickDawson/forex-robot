@@ -4,7 +4,6 @@ import com.trading.forex.common.model.Candle;
 import com.trading.forex.common.model.Symbol;
 import com.trading.forex.common.utils.CustomList;
 
-
 import static com.trading.forex.common.utils.AlgoUtils.isCrossPrice;
 import static com.trading.forex.common.utils.AlgoUtils.toPip;
 import static com.trading.forex.indicators.IndicatorUtils.toList;

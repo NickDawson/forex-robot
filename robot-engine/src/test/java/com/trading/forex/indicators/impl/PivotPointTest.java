@@ -4,7 +4,7 @@ import com.trading.forex.common.model.Candle;
 import com.trading.forex.model.PivotPointResult;
 import org.testng.annotations.Test;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
 
 /**
  * Created by hsouidi on 11/28/2017.

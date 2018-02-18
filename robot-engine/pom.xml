@@ -13,7 +13,7 @@
     <dependencies>
         <dependency>
             <groupId>com.trading.forex</groupId>
-            <artifactId>oanda-connector</artifactId>
+            <artifactId>oanda-broker-connector</artifactId>
             <version>${project.version}</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-jwt -->

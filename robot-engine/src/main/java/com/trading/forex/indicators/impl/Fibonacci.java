@@ -1,12 +1,11 @@
 package com.trading.forex.indicators.impl;
 
+import com.trading.forex.common.model.Candle;
+import com.trading.forex.common.model.Way;
 import com.trading.forex.common.utils.CustomList;
 import com.trading.forex.indicators.IndicatorUtils;
-import com.trading.forex.common.model.Candle;
 import com.trading.forex.model.FibonacciResult;
 import com.trading.forex.model.SearchResult;
-import com.trading.forex.common.model.Way;
-
 
 import java.util.function.Function;
 

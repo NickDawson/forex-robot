@@ -18,9 +18,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.trading.forex.common.utils.AlgoUtils.getFromDate;
-import static com.trading.forex.common.utils.AlgoUtils.normalize;
-import static com.trading.forex.common.utils.AlgoUtils.toPip;
+import static com.trading.forex.common.utils.AlgoUtils.*;
 import static com.trading.forex.indicators.IndicatorUtils.getValue;
 import static com.trading.forex.indicators.impl.MovingAverage.*;
 

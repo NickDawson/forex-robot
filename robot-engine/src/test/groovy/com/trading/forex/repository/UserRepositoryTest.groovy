@@ -1,8 +1,6 @@
 package com.trading.forex.repository
 
-import com.oanda.v20.instrument.CandlestickGranularity
 import com.trading.forex.RobotApp
-import Symbol
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.jdbc.Sql
